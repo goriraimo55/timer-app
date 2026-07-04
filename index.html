@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <!-- タブレットでの表示を想定。ピンチズームを無効化して誤操作を防ぐ -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Tick Timer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- タイマー終了時はこの要素に .finished クラスが付与され、全画面が点滅する -->
+  <main class="app" id="app">
+
+    <!-- ===== 左側：プリセット時間ボタン ===== -->
+    <aside class="presets">
+      <h1 class="presets__title">PRESET</h1>
+
+      <!-- data-minutes 属性の値(分)を script.js が読み取ってセットする -->
+      <div class="presets__list" id="presetList">
+        <button class="preset-btn" data-minutes="1">1<span>min</span></button>
+        <button class="preset-btn" data-minutes="3">3<span>min</span></button>
+        <button class="preset-btn" data-minutes="5">5<span>min</span></button>
+        <button class="preset-btn" data-minutes="10">10<span>min</span></button>
+        <button class="preset-btn" data-minutes="15">15<span>min</span></button>
+        <button class="preset-btn" data-minutes="30">30<span>min</span></button>
+        <button class="preset-btn" data-minutes="60">60<span>min</span></button>
+      </div>
+    </aside>
+
+    <!-- ===== 右側：タイマー表示と操作ボタン ===== -->
+    <section class="timer">
+
+      <!-- 残り時間表示 (mm:ss)。終了時は点滅する -->
+      <div class="timer__display" id="display">10:00</div>
+
+      <!-- 状態ラベル（READY / RUNNING / PAUSED / TIME UP） -->
+      <div class="timer__status" id="status">READY</div>
+
+      <!-- 操作ボタン -->
+      <div class="timer__controls">
+        <button class="ctrl-btn ctrl-btn--start" id="startBtn">START</button>
+        <button class="ctrl-btn ctrl-btn--stop"  id="stopBtn">STOP</button>
+        <button class="ctrl-btn ctrl-btn--reset" id="resetBtn">RESET</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
