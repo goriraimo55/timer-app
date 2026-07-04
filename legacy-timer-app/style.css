@@ -1,254 +1,232 @@
-/* Dark tablet layout with large touch targets for landscape use. */
+/* ============================================================
+   Tick Timer - style.css
+   Androidタブレット横向き・ダークモード想定
+   ============================================================ */
+
+/* ---- カラーパレット・共通変数 ---- */
+:root {
+  --bg:        #101418;  /* 画面全体の背景（ダークグレー） */
+  --panel:     #1a2028;  /* 左パネルの背景 */
+  --line:      #2a323d;  /* 枠線 */
+  --text:      #e8edf2;  /* 基本文字色 */
+  --text-dim:  #7d8a99;  /* 補助文字色 */
+  --accent:    #ffb020;  /* アクセント（アンバー：計器風） */
+  --green:     #37c46f;  /* STARTボタン */
+  --yellow:    #e0a800;  /* STOPボタン */
+  --red:       #d43a3a;  /* RESETボタン・終了時の点滅色 */
+}
+
+/* ---- リセット ---- */
 * {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  width: 100%;
-  min-height: 100%;
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* タブレットでの長押し選択・ハイライトを無効化 */
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+html, body {
+  height: 100%;
 }
 
 body {
-  min-height: 100vh;
-  background: #101217;
-  color: #f4f7fb;
-  font-family: Arial, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
-  overflow: hidden;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Roboto", "Segoe UI", "Noto Sans JP", sans-serif;
+  overflow: hidden; /* スクロールさせない（全画面アプリ風） */
 }
 
-button {
-  border: 0;
-  border-radius: 8px;
-  color: #f8fafc;
-  font: inherit;
-  font-weight: 700;
-  cursor: pointer;
-  touch-action: manipulation;
-}
-
-button:active {
-  transform: scale(0.98);
-}
-
+/* ============================================================
+   全体レイアウト：左（プリセット） / 右（タイマー）の2カラム
+   ============================================================ */
 .app {
-  display: grid;
-  grid-template-columns: minmax(280px, 34vw) 1fr;
-  gap: 28px;
-  width: 100vw;
+  display: flex;
   height: 100vh;
-  padding: 28px;
-  background: #101217;
+  height: 100dvh; /* Androidブラウザのアドレスバー対策 */
 }
 
-.preset-panel,
-.timer-panel {
-  min-height: 0;
-  border: 1px solid #2a3140;
-  background: #171b23;
-}
-
-.preset-panel {
+/* ============================================================
+   左側：プリセットパネル
+   ============================================================ */
+.presets {
+  width: 26%;
+  min-width: 200px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  padding: 20px 16px;
   display: flex;
   flex-direction: column;
-  padding: 26px;
 }
 
-h1 {
-  margin: 0 0 20px;
-  color: #cbd5e1;
-  font-size: clamp(32px, 5vw, 56px);
-  line-height: 1;
+.presets__title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 14px;
 }
 
-.preset-buttons {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
+/* プリセットボタンを縦に等間隔で並べる */
+.presets__list {
   flex: 1;
-}
-
-.preset-button {
-  min-height: 72px;
-  background: #253044;
-  border: 2px solid #37445d;
-  font-size: clamp(24px, 3vw, 36px);
-}
-
-.preset-button:hover,
-.preset-button.is-selected {
-  background: #2f6fed;
-  border-color: #74a2ff;
-}
-
-.timer-panel {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  align-items: center;
-  padding: 32px;
+  grid-template-rows: repeat(7, 1fr); /* 7個を均等配置 */
+  gap: 10px;
 }
 
-.timer-display {
+/* ---- プリセットボタン（指で押しやすい大きさ） ---- */
+.preset-btn {
+  font-family: inherit;
+  font-size: clamp(20px, 3.2vh, 32px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  min-height: 56px; /* タッチターゲット確保 */
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
-  min-height: 220px;
-  color: #ffffff;
-  font-size: clamp(130px, min(24vw, 46vh), 360px);
-  font-weight: 800;
+  gap: 6px;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.preset-btn span {
+  font-size: 0.5em;
+  font-weight: 400;
+  color: var(--text-dim);
+}
+
+.preset-btn:active {
+  background: var(--line);
+}
+
+/* 現在選択中のプリセットを強調表示 */
+.preset-btn.selected {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.preset-btn.selected span {
+  color: var(--accent);
+}
+
+/* ============================================================
+   右側：タイマー表示エリア
+   ============================================================ */
+.timer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3vh;
+  padding: 24px;
+}
+
+/* ---- 残り時間の大型表示 ---- */
+.timer__display {
+  font-size: clamp(80px, 24vw, 30vh); /* 画面いっぱいに大きく */
+  font-weight: 700;
+  font-variant-numeric: tabular-nums; /* 数字幅を固定して桁ブレ防止 */
+  letter-spacing: 0.04em;
   line-height: 1;
-  letter-spacing: 0;
-  font-variant-numeric: tabular-nums;
-  text-align: center;
-  border-radius: 8px;
-  padding: 12px;
+  color: var(--text);
 }
 
-.control-buttons {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(130px, 1fr));
-  gap: 18px;
-  width: 100%;
+/* カウントダウン中はアンバー色で表示 */
+.app.running .timer__display {
+  color: var(--accent);
 }
 
-.control-button {
-  min-height: 96px;
-  font-size: clamp(26px, 3.4vw, 46px);
+/* ---- 状態ラベル ---- */
+.timer__status {
+  font-size: clamp(14px, 2.2vh, 22px);
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  color: var(--text-dim);
 }
 
-.start-button {
-  background: #18a65a;
-  border: 3px solid #7ef0ad;
+/* ---- 操作ボタン列 ---- */
+.timer__controls {
+  display: flex;
+  gap: 20px;
 }
 
-.stop-button {
-  background: #e08a12;
-  border: 3px solid #ffd27a;
+.ctrl-btn {
+  font-family: inherit;
+  font-size: clamp(18px, 3vh, 28px);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  border: none;
+  border-radius: 14px;
+  min-width: 160px;
+  min-height: 72px; /* 指で押しやすい高さ */
+  padding: 0 24px;
+  cursor: pointer;
+  color: #0d1014;
+  transition: filter 0.15s, transform 0.05s;
 }
 
-.reset-button {
-  background: #56657a;
-  border: 3px solid #c7d2e1;
+.ctrl-btn:active {
+  transform: scale(0.97);
+  filter: brightness(0.85);
 }
 
-.control-button:disabled {
-  opacity: 0.78;
-  color: #dce6f3;
-  background: #293241;
-  border-color: #778399;
-  cursor: default;
-  transform: none;
+/* ボタンごとの色分け */
+.ctrl-btn--start { background: var(--green); }
+.ctrl-btn--stop  { background: var(--yellow); }
+.ctrl-btn--reset { background: var(--red); color: #fff; }
+
+/* ============================================================
+   タイマー終了時：全画面が赤⇔黒で1秒ごとに点滅
+   （RESETが押されるまで継続）
+   ============================================================ */
+
+/* 背景の点滅：2秒周期で赤1秒→黒1秒を繰り返す */
+@keyframes flash-bg {
+  0%, 49.9% { background: var(--red); }
+  50%, 100% { background: #000; }
 }
 
-/* Show a clear warning when the remaining time reaches one minute. */
-body.is-warning .timer-display {
-  color: #ffd84d;
+/* タイマー表示の点滅（背景と同期して視認性を保つ） */
+@keyframes flash-text {
+  0%, 49.9% { color: #000; }   /* 背景が赤のとき黒文字 */
+  50%, 100% { color: var(--red); } /* 背景が黒のとき赤文字 */
 }
 
-/* During the last ten seconds, invert the timer display every second. */
-body.is-critical .timer-display {
-  animation: criticalFlash 1s steps(1, end) infinite;
+.app.finished {
+  animation: flash-bg 2s steps(1) infinite;
 }
 
-/* After the countdown finishes, flash red and black until RESET is pressed. */
-body.is-finished {
-  animation: backgroundFlash 1s steps(1, end) infinite;
-}
-
-body.is-finished .timer-display {
-  animation: timerFlash 1s steps(1, end) infinite;
-}
-
-@keyframes backgroundFlash {
-  0%,
-  49% {
-    background: #b00000;
-  }
-
-  50%,
-  100% {
-    background: #000000;
-  }
-}
-
-@keyframes timerFlash {
-  0%,
-  49% {
-    color: #ffffff;
-  }
-
-  50%,
-  100% {
-    color: #ff1515;
-  }
-}
-
-@keyframes criticalFlash {
-  0%,
-  49% {
-    background: #f8fafc;
-    color: #05070a;
-  }
-
-  50%,
-  100% {
-    background: #05070a;
-    color: #f8fafc;
-  }
-}
-
-body.is-finished .app,
-body.is-finished .preset-panel,
-body.is-finished .timer-panel {
-  animation: backgroundFlash 1s steps(1, end) infinite;
-}
-
-body.is-finished .timer-display {
+/* 終了時は左パネルも点滅に合わせて透過（全画面点滅を優先） */
+.app.finished .presets {
   background: transparent;
+  border-right-color: transparent;
 }
 
-/* Stack the controls on narrow or portrait screens so the app remains usable. */
-@media (max-width: 760px), (orientation: portrait) {
-  body {
-    overflow: auto;
-  }
+.app.finished .timer__display {
+  animation: flash-text 2s steps(1) infinite;
+}
 
-  .app {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-    height: auto;
-    min-height: 100vh;
-    padding: 18px;
-  }
+.app.finished .timer__status {
+  color: #fff;
+}
 
-  .preset-buttons {
-    grid-template-columns: repeat(2, minmax(120px, 1fr));
+/* 動きを減らす設定のユーザーには点滅の代わりに赤固定表示 */
+@media (prefers-reduced-motion: reduce) {
+  .app.finished,
+  .app.finished .timer__display {
+    animation: none;
   }
-
-  .preset-button {
-    min-height: 68px;
+  .app.finished {
+    background: var(--red);
   }
-
-  .timer-panel {
-    min-height: 420px;
-    padding: 22px;
-  }
-
-  .timer-display {
-    min-height: 180px;
-    font-size: clamp(96px, min(28vw, 28vh), 220px);
-  }
-
-  .control-buttons {
-    grid-template-columns: 1fr;
-  }
-
-  .control-button {
-    min-height: 76px;
+  .app.finished .timer__display {
+    color: #000;
   }
 }
