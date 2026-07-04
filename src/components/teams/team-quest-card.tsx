@@ -19,7 +19,7 @@ export function TeamQuestCard({ team }: { team: TeamQuest }) {
             <Users className="h-3 w-3" /> チームクエスト
           </Badge>
         </div>
-        <Link href={`/teams/${team.id}`} className="mt-1 block">
+        <Link href={`/teams/detail?id=${team.id}`} className="mt-1 block">
           <h3 className="text-base font-bold leading-snug text-foreground hover:text-primary">{team.title}</h3>
         </Link>
         <p className="flex items-center gap-1 text-xs text-muted">
@@ -54,7 +54,7 @@ export function TeamQuestCard({ team }: { team: TeamQuest }) {
           </span>
         </div>
         <Button asChild size="sm" className="mt-auto">
-          <Link href={`/teams/${team.id}`}>詳細・参加申請</Link>
+          <Link href={`/teams/detail?id=${team.id}`}>詳細・参加申請</Link>
         </Button>
       </CardContent>
     </Card>

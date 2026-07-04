@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useParams, notFound } from "next/navigation";
+import { Suspense, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   Building2,
@@ -42,15 +42,33 @@ import {
 import { AdSlot } from "@/components/ad-slot";
 
 export default function QuestDetailPage() {
-  const params = useParams<{ id: string }>();
+  return (
+    <Suspense>
+      <QuestDetail />
+    </Suspense>
+  );
+}
+
+function QuestDetail() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const { allQuests, state, completeQuest } = useApp();
   const [note, setNote] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const quest = useMemo(() => allQuests.find((q) => q.id === params.id), [allQuests, params.id]);
+  const quest = useMemo(() => allQuests.find((q) => q.id === id), [allQuests, id]);
 
   if (!quest) {
-    notFound();
+    return (
+      <div className="rounded-2xl border border-dashed border-border p-10 text-center text-sm text-muted">
+        クエストが見つかりませんでした。
+        <p className="mt-2">
+          <Link href="/quests" className="text-primary hover:underline">
+            ← クエスト一覧に戻る
+          </Link>
+        </p>
+      </div>
+    );
   }
 
   const alreadyCompleted = state.completedQuestIds.includes(quest.id);
@@ -207,7 +225,7 @@ export default function QuestDetailPage() {
               </CardHeader>
               <CardContent className="flex flex-wrap gap-2 pt-0">
                 {referenceMaterials.map((m) => (
-                  <Link key={m.id} href={`/learning/${m.id}`}>
+                  <Link key={m.id} href={`/learning/detail?id=${m.id}`}>
                     <Badge variant="default">{m.title}</Badge>
                   </Link>
                 ))}

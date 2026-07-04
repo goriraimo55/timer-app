@@ -36,7 +36,7 @@ export function QuestCard({ quest, completed = false }: { quest: Quest; complete
           )}
           {completed && <Badge variant="success">完了済み</Badge>}
         </div>
-        <Link href={`/quests/${quest.id}`} className="mt-1 block">
+        <Link href={`/quests/detail?id=${quest.id}`} className="mt-1 block">
           <h3 className="text-base font-bold leading-snug text-foreground hover:text-primary">
             {quest.title}
           </h3>
@@ -73,7 +73,7 @@ export function QuestCard({ quest, completed = false }: { quest: Quest; complete
         <div className="flex items-center justify-between pt-1">
           <SafetyLevelMeter level={quest.safetyLevel} />
           <Button asChild size="sm" variant={challengeable ? "default" : "outline"}>
-            <Link href={`/quests/${quest.id}`}>{challengeable ? "挑戦する" : "詳細を見る"}</Link>
+            <Link href={`/quests/detail?id=${quest.id}`}>{challengeable ? "挑戦する" : "詳細を見る"}</Link>
           </Button>
         </div>
       </CardContent>

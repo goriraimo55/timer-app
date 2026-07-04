@@ -19,7 +19,7 @@ export function MaterialCard({ material, completed = false }: { material: Materi
             </Badge>
           )}
         </div>
-        <Link href={`/learning/${material.id}`} className="mt-1 block">
+        <Link href={`/learning/detail?id=${material.id}`} className="mt-1 block">
           <h3 className="text-base font-bold leading-snug text-foreground hover:text-primary">
             {material.title}
           </h3>
@@ -36,7 +36,7 @@ export function MaterialCard({ material, completed = false }: { material: Materi
           </span>
         </div>
         <Button asChild size="sm" variant={completed ? "outline" : "default"} className="mt-auto">
-          <Link href={`/learning/${material.id}`}>{completed ? "復習する" : "学習を始める"}</Link>
+          <Link href={`/learning/detail?id=${material.id}`}>{completed ? "復習する" : "学習を始める"}</Link>
         </Button>
       </CardContent>
     </Card>

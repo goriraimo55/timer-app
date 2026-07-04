@@ -36,10 +36,24 @@ npm run dev
 その他のコマンド:
 
 ```bash
-npm run build   # 本番ビルド
-npm run start   # 本番ビルドの起動
-npm run lint    # ESLint
+npm run build     # 静的サイトとして out/ にビルド(output: "export")
+npx serve out     # ビルド結果をローカルで確認
+npm run lint      # ESLint
 ```
+
+## GitHub Pages で公開する(ブラウザで動かす)
+
+このアプリは静的書き出し(`output: "export"`)に対応しており、GitHub Pages 上でそのまま動きます。`main` ブランチへのプッシュで `.github/workflows/deploy-pages.yml` が自動的にビルド&デプロイします。
+
+**初回のみ必要な設定:**
+
+1. GitHubのリポジトリページで **Settings → Pages** を開く
+2. **Source** を **GitHub Actions** に変更する(「Deploy from a branch」のままだとREADMEやソースがそのまま表示されてしまいます)
+3. **Actions** タブからワークフロー「Deploy to GitHub Pages」が成功するのを待つ
+
+公開URL: `https://<ユーザー名>.github.io/timer-app/`
+
+(バックエンド不要・全データ`localStorage`保存のため、静的ホスティングだけで全機能が動作します)
 
 初回アクセス時は、デモ用にあらかじめ経験値・完了クエスト・バッジなどが入った状態(Lv.5・XP1,450・連続学習8日など)から始まります。挑戦・学習・投稿・承認などの操作はすべてブラウザの `localStorage`(キー: `kosen-quest-state-v1`)に保存されます。リセットしたい場合はブラウザの開発者ツールから該当キーを削除してください。
 
@@ -52,10 +66,10 @@ src/
 │  ├─ quests/
 │  │  ├─ page.tsx              # 2. クエスト一覧画面
 │  │  ├─ new/page.tsx          # 4. 企業向け仕事投稿テンプレート画面
-│  │  └─ [id]/page.tsx         # 3. クエスト詳細画面(提出テンプレート込み)
+│  │  └─ detail/page.tsx       # 3. クエスト詳細画面(?id=クエストIDで表示)
 │  ├─ learning/
 │  │  ├─ page.tsx              # 5. 機械設計学習ページ(カテゴリ一覧)
-│  │  └─ [id]/page.tsx         # 5. 教材詳細・ミニクイズ・学習完了
+│  │  └─ detail/page.tsx       # 5. 教材詳細・ミニクイズ・学習完了(?id=教材ID)
 │  ├─ skills/page.tsx          # 6. スキルツリー画面
 │  ├─ profile/page.tsx         # 7. プロフィール(実績ポートフォリオ)画面
 │  ├─ teacher/page.tsx         # 8. 教員承認画面
@@ -64,7 +78,7 @@ src/
 │  ├─ certificate/page.tsx     # 11. スキル証明書PDF出力(印刷)画面
 │  ├─ teams/
 │  │  ├─ page.tsx              # 12. チームクエスト一覧
-│  │  └─ [id]/page.tsx         # 12. チームクエスト詳細・参加申請
+│  │  └─ detail/page.tsx       # 12. チームクエスト詳細・参加申請(?id=チームクエストID)
 │  ├─ layout.tsx               # ルートレイアウト(AppProvider・AppShell)
 │  ├─ not-found.tsx
 │  └─ globals.css              # ダーク・ネオンテーマ定義、アニメーション

@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import { Suspense, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2, Clock, HelpCircle, Sparkles, XCircle } from "lucide-react";
 import { useApp } from "@/lib/store";
@@ -18,11 +18,20 @@ import { cn } from "@/lib/utils";
 import type { SkillId } from "@/lib/types";
 
 export default function MaterialDetailPage() {
-  const params = useParams<{ id: string }>();
+  return (
+    <Suspense>
+      <MaterialDetail />
+    </Suspense>
+  );
+}
+
+function MaterialDetail() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const { state, allQuests, completeMaterial } = useApp();
   const [answers, setAnswers] = useState<Record<number, number>>({});
 
-  const material = useMemo(() => materials.find((m) => m.id === params.id), [params.id]);
+  const material = useMemo(() => materials.find((m) => m.id === id), [id]);
 
   if (!material) {
     return (

@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import { Suspense, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   Building2,
   CalendarClock,
@@ -29,16 +29,25 @@ import { DifficultyBadge, SafetyLabelBadge } from "@/components/quests/quest-bad
 import type { TeamRole } from "@/lib/types";
 
 export default function TeamQuestDetailPage() {
-  const params = useParams<{ id: string }>();
+  return (
+    <Suspense>
+      <TeamQuestDetail />
+    </Suspense>
+  );
+}
+
+function TeamQuestDetail() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const { state, applyToTeamQuest } = useApp();
   const [role, setRole] = useState<TeamRole | "">("");
   const [applied, setApplied] = useState(false);
 
-  const team = useMemo(() => teamQuests.find((t) => t.id === params.id), [params.id]);
+  const team = useMemo(() => teamQuests.find((t) => t.id === id), [id]);
 
   const myApplications = useMemo(
-    () => state.teamApplications.filter((a) => a.teamQuestId === params.id),
-    [state.teamApplications, params.id]
+    () => state.teamApplications.filter((a) => a.teamQuestId === id),
+    [state.teamApplications, id]
   );
 
   if (!team) {
